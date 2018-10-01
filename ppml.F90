@@ -1,6 +1,6 @@
 !=======================================================================
 
-SUBROUTINE PPML                                                                !preparation PML
+SUBROUTINE PPML                                                                
 
   USE PRECISION   , ONLY:                                              &
                           PP

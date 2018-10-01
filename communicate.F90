@@ -38,19 +38,19 @@ SUBROUTINE COMMUNICATE (VARIABLE)
   IF ( SIZE > 0 )  THEN
 
     stag = 0
-    rtag = 0                                                                !tu sa posiela prava hranica kazdej process-oblasti svojmu susedovi
+    rtag = 0                                                                
     IF ( dest_id0A /= MPI_PROC_NULL ) THEN                                 
       BUFXS(1:OVERLAP,1:Z_MAX-Z_MIN+1) =                               &
         VARIABLE (X_MAX+1-OVERLAP:X_MAX,Z_MIN:Z_MAX)
-      IF ( source_id0A == MPI_PROC_NULL ) THEN                              !tento process je uplne prvy-na lavej hranici,
-        CALL MPI_SEND            (BUFXS, SIZE, MPI_REAL,               &    !takze nemoze prijmat,
-                                   dest_id0A, stag,                    &    !moze len posielat
+      IF ( source_id0A == MPI_PROC_NULL ) THEN                              
+        CALL MPI_SEND            (BUFXS, SIZE, MPI_REAL,               &    
+                                   dest_id0A, stag,                    &    
                                    comm_cart, errcode)                      
                                                                             
                                                                             
                                                                             
         
-      ELSE                                                                  !procesy v strede-prijmaju aj posielaju
+      ELSE                                                                  
         CALL MPI_ISEND           (BUFXS, SIZE, MPI_REAL,               &
                                    dest_id0A, stag,                    &
                                    comm_cart, request, errcode)
@@ -62,9 +62,9 @@ SUBROUTINE COMMUNICATE (VARIABLE)
         CALL MPI_WAIT (request, status, errcode)
       END IF
     ELSE
-      IF ( source_id0A /= MPI_PROC_NULL ) THEN                              !tento process je uplne posledny-na pravej hranici,
-        CALL MPI_RECV            (BUFXR, SIZE, MPI_REAL,               &    !takze nemoze posielat,
-                                                    source_id0A, rtag, &    !moze len prijat
+      IF ( source_id0A /= MPI_PROC_NULL ) THEN                              
+        CALL MPI_RECV            (BUFXR, SIZE, MPI_REAL,               &    
+                                                    source_id0A, rtag, &    
                                    comm_cart, status, errcode)
         VARIABLE (X_MIN_D:X_MIN_D+OVERLAP-1,            Z_MIN:Z_MAX) = &
           BUFXR(1:OVERLAP,                1:Z_MAX-Z_MIN+1)
@@ -76,12 +76,12 @@ SUBROUTINE COMMUNICATE (VARIABLE)
     IF ( dest_id0B /= MPI_PROC_NULL ) THEN                                
       BUFXS = VARIABLE (X_MIN:X_MIN+OVERLAP-1,            Z_MIN:Z_MAX)    
       IF ( source_id0B == MPI_PROC_NULL ) THEN                            
-        CALL MPI_SEND            (BUFXS, SIZE, MPI_REAL,               &  !tento process je uplne posledny-na pravej hranici,
-                                   dest_id0B, stag,                    &  !takze moze posielat,
-                                   comm_cart, errcode)                    !nemoze len prijat
+        CALL MPI_SEND            (BUFXS, SIZE, MPI_REAL,               &  
+                                   dest_id0B, stag,                    &  
+                                   comm_cart, errcode)                    
         
         
-      ELSE                                                                !procesy v strede-prijmaju aj posielaju
+      ELSE                                                                
         CALL MPI_ISEND           (BUFXS, SIZE, MPI_REAL,               &
                                    dest_id0B, stag,                    &
                                    comm_cart, request, errcode)
@@ -94,8 +94,8 @@ SUBROUTINE COMMUNICATE (VARIABLE)
       END IF
     ELSE
       IF ( source_id0B /= MPI_PROC_NULL ) THEN
-        CALL MPI_RECV            (BUFXR, SIZE, MPI_REAL,               &   !tento process je uplne prvy-na lavej hranici,
-                                                    source_id0B, rtag, &   !takze moze prijat
+        CALL MPI_RECV            (BUFXR, SIZE, MPI_REAL,               &   
+                                                    source_id0B, rtag, &   
                                    comm_cart, status, errcode)
         VARIABLE (X_MAX_D+1-OVERLAP:X_MAX_D,            Z_MIN:Z_MAX) = &
           BUFXR
